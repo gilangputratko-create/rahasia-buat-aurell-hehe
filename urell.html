@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Buat Aurell - Valentine 2026</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Pacifico&display=swap');
+
+        :root {
+            --muted-rose: #a6757a;
+            --bg-dusty: #d8b4b8;
+        }
+
+        body {
+            background-color: var(--bg-dusty);
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+            touch-action: none;
+            color: #4a3a3a;
+        }
+
+        .decor {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.25;
+            animation: floatBG 6s infinite ease-in-out;
+            font-size: 25px;
+            z-index: 1;
+        }
+
+        @keyframes floatBG {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+
+        .nav-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--muted-rose);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        #draggable-popup {
+            display: none;
+            position: fixed;
+            width: 280px;
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border: 3px solid var(--muted-rose);
+            cursor: move;
+            z-index: 100;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .drag-hint {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .hand-icon {
+            animation: handMove 1.5s infinite;
+        }
+
+        @keyframes handMove {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        .foto-box { width: 100%; border-radius: 15px; margin-bottom: 10px; }
+
+        #gallery-page {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dusty);
+            z-index: 150;
+            padding: 70px 20px 20px;
+            box-sizing: border-box;
+            overflow-y: auto; 
+            touch-action: pan-y;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 8px 8px 20px 8px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            transform: rotate(var(--r));
+        }
+
+        .polaroid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+
+        #sorry-page {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fdf2f2;
+            z-index: 200;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .foto-maaf { width: 180px; height: 180px; border-radius: 20px; object-fit: cover; border: 4px solid var(--muted-rose); margin-bottom: 20px; }
+        .sorry-text { max-width: 320px; text-align: center; font-size: 0.95rem; line-height: 1.6; color: #555; }
+
+        .heart-particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 999;
+            animation: fall 1.5s forwards linear;
+        }
+
+        @keyframes fall { to { transform: translateY(500px) rotate(360deg); opacity: 0; } }
+
+        .main-btn { background: var(--muted-rose); color: white; border: none; padding: 15px 35px; border-radius: 50px; font-size: 1.1rem; cursor: pointer; z-index: 10; }
+    </style>
+</head>
+<body>
+
+    <audio id="myAudio" loop autoplay>
+        <source src="https://files.catbox.moe/66i6ah.m4a" type="audio/mp4">  <!-- .m4a pakai type audio/mp4 (AAC) -->
+        Your browser does not support the audio element.
+    </audio>
+
+    <button id="btnNext1" class="nav-btn" onclick="goToGallery()">Lanjut ➔</button>
+    <button id="btnNext2" class="nav-btn" onclick="goToSorry()">Lanjut ➔</button>
+
+    <button class="main-btn" id="openBtn" onclick="initPopup()">Klik ini, Urell 💕</button>
+
+    <!-- Hal 1 -->
+    <div id="draggable-popup">
+        <h2 style="font-family:'Pacifico'; color:var(--muted-rose); margin:5px 0;">Happy Valentine!</h2>
+        <img src="https://i.ibb.co.com/PGLXsWK0/foto.jpg" class="foto-box">
+        <p style="font-size: 0.85rem;">
+            <b>Aurell Yessa Hernanda Nayutama</b><br><br>
+            Semangat terus harinya ya sayang, Urelllll!<br>
+            <b>CALL AKU YA HEHE ✨</b>
+        </p>
+        <p style="font-weight: bold; color: var(--muted-rose); margin-bottom: 0;">— Gilang</p>
+        <div class="drag-hint">
+            <span class="hand-icon">👈👉</span> Coba geser aku!
+        </div>
+    </div>
+
+    <!-- Hal 2 -->
+    <div id="gallery-page">
+        <h2 style="text-align:center; font-family:'Pacifico'; color:white;">Memories 🌸</h2>
+        <div class="gallery-grid">
+            <div class="polaroid" style="--r:-3deg;"><img src="https://i.ibb.co.com/gLydCbVG/foto1.jpg"></div>
+            <div class="polaroid" style="--r:2deg;"><img src="https://i.ibb.co.com/B25PKrB2/foto2.jpg"></div>
+            <div class="polaroid" style="--r:-2deg;"><img src="https://i.ibb.co.com/VpmfM429/foto3.jpg"></div>
+            <div class="polaroid" style="--r:4deg;"><img src="https://i.ibb.co.com/21CB4B5b/foto4.jpg"></div>
+            <div class="polaroid" style="--r:-4deg;"><img src="https://i.ibb.co.com/kgvqDPnG/foto5.jpg"></div>
+            <div class="polaroid" style="--r:3deg;"><img src="https://i.ibb.co.com/pvVQDmM5/foto6.jpg"></div>
+        </div>
+    </div>
+
+    <!-- Hal 3 -->
+    <div id="sorry-page" style="display:none;">
+        <h2 style="font-family:'Pacifico'; color:var(--muted-rose); margin-bottom:10px;">Maafin aku ya...</h2>
+        <img src="https://i.ibb.co.com/Hfz20tnG/foto-last.jpg" class="foto-maaf">
+        <div class="sorry-text">
+            <p>Sayang, maafin aku ya kalau aku kadang bingung mau respon gimana ke kamu. Jujur aku masih belajar banget buat ngertiin u.</p>
+            <p>Maaf kalau aku kurang bisa treat u, tapi percaya ya kalau aku udah sebisa mungkin buat selalu ada dan ngerespon kmu.</p>
+            <p style="font-weight:bold; color:var(--muted-rose);">I love you in every universe, Aurell! ❤️</p>
+        </div>
+    </div>
+
+    <script>
+        const popup = document.getElementById('draggable-popup');
+        const openBtn = document.getElementById('openBtn');
+        const nBtn1 = document.getElementById('btnNext1');
+        const nBtn2 = document.getElementById('btnNext2');
+        const audio = document.getElementById('myAudio');
+        let isDragging = false;
+        let startX, startY, initX, initY;
+
+        for(let i=0; i<20; i++){
+            let d = document.createElement('div');
+            d.className = 'decor';
+            d.innerHTML = ['🌸', '✨', '🐾', '💖'][Math.floor(Math.random()*4)];
+            d.style.left = Math.random() * 100 + 'vw';
+            d.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(d);
+        }
+
+        function initPopup() {
+            audio.play().catch(e => console.log("Audio play failed: " + e.message));
+            openBtn.style.display = 'none';
+            popup.style.display = 'block';
+            nBtn1.style.display = 'block';
+        }
+
+        function goToGallery() {
+            nBtn1.style.display = 'none';
+            popup.style.display = 'none';
+            document.getElementById('gallery-page').style.display = 'block';
+            nBtn2.style.display = 'block';
+        }
+
+        function goToSorry() {
+            nBtn2.style.display = 'none';
+            document.getElementById('gallery-page').style.display = 'none';
+            document.getElementById('sorry-page').style.display = 'flex';
+        }
+
+        const start = (e) => {
+            isDragging = true;
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            startX = cx; startY = cy;
+            const rect = popup.getBoundingClientRect();
+            initX = rect.left; initY = rect.top;
+            popup.style.transform = 'none';
+            popup.style.left = initX + 'px'; popup.style.top = initY + 'px';
+        };
+
+        const move = (e) => {
+            if (!isDragging) return;
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            popup.style.left = (initX + (cx - startX)) + 'px';
+            popup.style.top = (initY + (cy - startY)) + 'px';
+            for(let i=0; i<3; i++) createHeart(cx, (initY + (cy - startY) + 180));
+        };
+
+        function createHeart(x, y) {
+            const h = document.createElement('div');
+            h.className = 'heart-particle';
+            h.innerHTML = ['💖', '🐾', '✨', '❤️'][Math.floor(Math.random()*4)];
+            h.style.left = (x - 30 + Math.random()*60) + 'px';
+            h.style.top = y + 'px';
+            h.style.fontSize = (Math.random()*15+15)+'px';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 1200);
+        }
+
+        popup.addEventListener('mousedown', start);
+        window.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', () => isDragging = false);
+        popup.addEventListener('touchstart', start, {passive: false});
+        window.addEventListener('touchmove', move, {passive: false});
+        window.addEventListener('touchend', () => isDragging = false);
+    </script>
+</body>
+</html>
